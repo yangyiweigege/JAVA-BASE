@@ -1,0 +1,110 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.weige.spring.jms</groupId>
+  <artifactId>jms_spring</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>jms_spring</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!--配置spring版本 -->
+	<commons-lang.version>2.6</commons-lang.version>
+	<slf4j.version>1.7.6</slf4j.version>
+	<spring.version>4.1.3.RELEASE</spring.version>
+  </properties>
+
+  <dependencies>
+  		
+  		<!-- mqtt依赖 开始 -->  
+        <dependency>  
+            <groupId>org.fusesource.mqtt-client</groupId>  
+            <artifactId>mqtt-client</artifactId>  
+            <version>1.9</version>
+        </dependency>  
+        <dependency>  
+            <groupId>org.eclipse.paho</groupId>  
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId> 
+            <version>1.1.1</version> 
+        </dependency>  
+        <!-- mqtt依赖 结束 -->
+  
+ 		<!-- 配置spring管理JMS -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- 配置spring上下文环境-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- 配置spring上下文环境-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.3.11.RELEASE</version>
+		</dependency>
+		<!-- 配置JMS（java message service）插件activeMQ -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-all</artifactId>
+			<version>5.15.0</version>
+		</dependency>
+		<!-- 配置JMS 核心 -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+			<version>5.7.0</version>
+			<exclusions>
+			<exclusion>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+			</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		
+		   <!--     定时任务：quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+    
+    	<!-- mysql的数据库驱动包 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.25</version>
+		</dependency>
+    	
+        <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.2.0.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.alibaba</groupId>
+		  <artifactId>fastjson-ihygeia</artifactId>
+		  <version>1.2.7</version>
+		</dependency>
+		
+  </dependencies>
+  
+  
+</project>

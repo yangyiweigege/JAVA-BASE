@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+
+
+	<!-- 配置后 可以使用@autowired,@resource等注解 -->
+	<context:annotation-config />
+
+	<!-- ActiveMQ为我们提供的ConnectionFactory -->
+	<bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://127.0.0.1:61616" />
+	</bean>
+
+
+	<!-- SpringJMS为我们提供的连接池 -->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.SingleConnectionFactory">
+		<property name="targetConnectionFactory" ref="targetConnectionFactory" />
+	</bean>
+
+	<!-- 队列模式 -->
+	<bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue" />
+	</bean>
+
+	<!-- 主题模式 -->
+	<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg value="topic" />
+	</bean>
+
+
+	<!-- 1 任务定时任务 配置定时任务的类 -->
+	<bean id="planQuartz" class="com.weige.spring.timer.MyTimer" />
+
+
+	<!--2  配置定时任务调度的方法 -->
+	<bean id="schedulerPlanQuartz"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="planQuartz" />
+		<property name="targetMethod" value="jobStart" /><!-- 设置调用的方法 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="schedulerPlanQuartzInsertHisMsg"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="planQuartz" />
+		<property name="targetMethod" value="insertMsgHis" /><!-- 设置调用的方法 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<!--3 设置定时任务方法的运行周期时间 -->
+	<bean id="planQuartzTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="schedulerPlanQuartz" />
+		<property name="cronExpression" value="0 * * * * ?" /> <!-- 每分钟执行一次 -->
+	</bean>
+	<bean id="planQuartzTriggerInsertHisMsg"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="schedulerPlanQuartzInsertHisMsg" />
+		<property name="cronExpression" value="0 * * * * ?" /> <!-- 每分钟执行一次 -->
+	</bean>
+	<!--4  启动定时任务 -->
+	<bean id="schedulerFactory" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="planQuartzTrigger" />
+				<ref bean="planQuartzTriggerInsertHisMsg" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

@@ -1,6 +1,5 @@
 package com.weige.ssm.gc;
 
-import static org.hamcrest.CoreMatchers.nullValue;
 
 /**
  * 一次对象被回收之前 至少经历两次标记

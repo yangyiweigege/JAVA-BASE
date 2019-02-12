@@ -9,11 +9,11 @@ public class FillHeap {
 		//每个对象 64kb
 		public byte[] placeholder = new byte[64 * 1024];
 	}
-	
+
 	public static void fillHeap(int num) throws InterruptedException {
 		List<OOMObject> list = new ArrayList<>();
 		for(int i = 0; i < num; i++) {
-			Thread.sleep(50);
+			Thread.sleep(100);
 			list.add(new OOMObject());
 		}
 		System.gc();

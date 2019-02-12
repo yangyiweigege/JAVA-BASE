@@ -13,38 +13,36 @@ public class ConcurrencyTest {
 	public static int clientTotal = 10;
 
 	// 同时并发请求
-	public static int threadTotal = 1;
+	public static int threadTotal = 5;
 
 	public static int count = 0;
 
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		ExecutorService executorService = Executors.newCachedThreadPool();
-		/*final*/ Semaphore semaphore = new Semaphore(threadTotal);
-		/*final */CountDownLatch countDownLatch = new CountDownLatch(10);
+		Semaphore semaphore = new Semaphore(threadTotal);
+		CountDownLatch countDownLatch = new CountDownLatch(10);
 		for (int i = 0; i < clientTotal; i++) {
 
 			executorService.submit(() -> {
 				try {
 					semaphore.acquire();
 					add();
-					Thread.sleep(200);
+					System.out.println("执行了一次");
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} finally {
 					countDownLatch.countDown(); //线程计数 比如十个线程 全部完成 才往后走
 					semaphore.release();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			});
 		}
 		
 		executorService.shutdown();
-		try {
-			countDownLatch.await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		countDownLatch.await();
+
 		System.out.println("count:" + count);
 	}
 

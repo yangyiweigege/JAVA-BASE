@@ -14,11 +14,16 @@ import org.junit.Test;
  */
 public class AreaOOMTest {
 
+
+	public static void main(String[] args) {
+		heapOOM();
+	}
+
 	/**
 	 * 测试java内存模型中的堆区域溢出
 	 */
-	@Test
-	public void heapOOM() {
+	//@Test
+	public static void heapOOM() {
 		List<AreaOOMTest> list = new ArrayList<>();
 		while (true) {
 			list.add(new AreaOOMTest());
